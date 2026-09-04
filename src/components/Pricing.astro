@@ -1,0 +1,50 @@
+---
+import Panel from './Panel.astro';
+import Readout from './Readout.astro';
+import { site } from '../data/site';
+
+const { amount, unit, cupsPerBag, shipping, freeShippingFrom } = site.price;
+const bullets = [
+  'Зерно или помол под ваш способ — воронка, гейзер, турка, рожок',
+  `Доставка ${shipping} ₽ по России, бесплатно от ${freeShippingFrom.toLocaleString('ru-RU')} ₽`,
+  'Оплата картой «Мир» и через СБП',
+  'Пауза, пропуск и отмена — из личного кабинета, без звонков',
+];
+---
+
+<Panel id="pricing" eyebrow="тариф" title="Одна цена за любую обжарку. Без Free, Pro и Enterprise">
+  <div class="grid items-center gap-7 sm:grid-cols-[auto_1fr]" data-reveal>
+    <Readout
+      value={String(amount)}
+      unit="₽"
+      size="lg"
+      class="max-w-[280px]"
+      ariaLabel={`Цена ${amount} рублей`}
+    >
+      <span>{unit} · {cupsPerBag}</span>
+    </Readout>
+
+    <ul class="text-dim grid gap-1.5 pl-4 text-sm [list-style:square]">
+      {bullets.map((b) => <li>{b}</li>)}
+    </ul>
+  </div>
+
+  <div class="mt-7 flex flex-wrap gap-3" data-reveal>
+    <a
+      href="#top"
+      class="border-vfd text-vfd hover:bg-vfd border px-5 py-3 text-[13px] tracking-[0.08em] uppercase transition-colors hover:text-[#05100e]"
+    >
+      Собрать подписку
+    </a>
+    <a
+      href="#roasts"
+      class="border-line text-dim hover:text-hi border px-5 py-3 text-[13px] tracking-[0.08em] uppercase transition-colors"
+    >
+      Сравнить обжарки
+    </a>
+  </div>
+
+  <p class="text-dim mt-4 text-sm" data-reveal>
+    Не зашло — следующую доставку отменяете в два клика.
+  </p>
+</Panel>

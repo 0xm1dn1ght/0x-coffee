@@ -1,0 +1,25 @@
+---
+import Panel from './Panel.astro';
+import { steps } from '../data/roasts';
+---
+
+<Panel
+  id="how"
+  eyebrow="режим работы"
+  title="Одна настройка на пять минут — дальше свежий кофе приходит сам"
+>
+  <ol class="grid gap-3" data-reveal>
+    {
+      steps.map((step) => (
+        <li class="border-line relative border-t-2 pt-5">
+          <span class="text-vfd mb-2 block text-xs font-bold tracking-[0.1em]">{step.n}</span>
+          <b class="text-hi mb-1 block">{step.title}</b>
+          <span class="text-dim text-sm">{step.body}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="text-dim mt-6 text-sm" data-reveal>
+    Первая пачка едет к вам ещё тёплой после обжарки — буквально в течение 24 часов.
+  </p>
+</Panel>

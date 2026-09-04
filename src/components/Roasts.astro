@@ -1,0 +1,44 @@
+---
+import Panel from './Panel.astro';
+import CoffeeMark from './CoffeeMark.astro';
+import RoastGauge from './RoastGauge.astro';
+import { roasts } from '../data/roasts';
+---
+
+<Panel id="roasts" eyebrow="каталог обжарок" title="Три профиля">
+  <p class="text-dim mb-8 max-w-[54ch]">
+    <span class="text-fg">null</span>, <span class="text-fg">segfault</span>,
+    <span class="text-fg">deadlock</span> — названия наши, для своих. На вкус это просто очень хороший
+    моносорт: разберётся кто угодно, даже если не знает, что такое segfault.
+  </p>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      roasts.map((roast) => (
+        <article class="border-line bg-panel flex flex-col gap-3 rounded-md border p-5" data-reveal>
+          <div class="panel-scan border-vfd-dim rounded border bg-[#05100e] p-3">
+            <CoffeeMark
+              variant="bean"
+              tone={roast.level}
+              class="mx-auto block h-auto w-full max-w-[220px]"
+            />
+          </div>
+
+          <h3 class="text-hi text-[1.05rem] font-bold tracking-wide">{roast.name}</h3>
+          <p class="text-dim text-xs tracking-[0.1em] uppercase">
+            {roast.levelLabel} · {roast.origin}
+          </p>
+
+          <RoastGauge filled={roast.gauge} />
+
+          <p class="text-sm">{roast.blurb}</p>
+
+          <p class="text-amber text-[13px]">{roast.notes.join(' · ')}</p>
+          <p class="text-dim mt-auto pt-1 text-xs">
+            <span class="text-vfd">когда:</span> {roast.when}
+          </p>
+        </article>
+      ))
+    }
+  </div>
+</Panel>

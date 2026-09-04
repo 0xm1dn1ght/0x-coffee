@@ -1,0 +1,27 @@
+---
+/** Segmented "roast level" gauge — `filled` of `total` segments lit. */
+interface Props {
+  filled: number;
+  total?: number;
+  label?: string;
+  class?: string;
+}
+const { filled, total = 8, label = 'степень обжарки', class: klass } = Astro.props;
+const segments = Array.from({ length: total }, (_, i) => i < filled);
+---
+
+<div class:list={['flex flex-col gap-1.5', klass]}>
+  <span class="eyebrow text-[0.65rem]">{label}</span>
+  <div class="flex gap-[3px]" role="img" aria-label={`${label}: ${filled} из ${total}`}>
+    {
+      segments.map((on) => (
+        <span
+          class:list={[
+            'h-2 w-3.5',
+            on ? 'bg-vfd shadow-[0_0_4px_rgb(95_240_216/0.7)]' : 'bg-vfd-dim',
+          ]}
+        />
+      ))
+    }
+  </div>
+</div>

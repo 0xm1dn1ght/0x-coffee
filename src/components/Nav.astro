@@ -1,0 +1,28 @@
+---
+import { site } from '../data/site';
+---
+
+<header
+  class="border-line bg-metal/95 supports-[backdrop-filter]:bg-metal/80 sticky top-0 z-20 border-b backdrop-blur"
+>
+  <div class="mx-auto flex max-w-5xl items-center gap-4 px-5 py-3 text-[13px]">
+    <a href="#top" class="shrink-0 tracking-[0.14em] whitespace-nowrap uppercase">
+      <span class="text-vfd">0x</span> coffee
+      <span class="text-dim hidden sm:inline">· свежая обжарка</span>
+    </a>
+    <nav
+      class="ml-auto flex [scrollbar-width:none] gap-4 overflow-x-auto text-xs tracking-[0.1em] uppercase [-ms-overflow-style:none] max-sm:-mr-5 max-sm:pr-5 [&::-webkit-scrollbar]:hidden"
+    >
+      {
+        site.nav.map((item) => (
+          <a
+            href={item.href}
+            class="text-dim hover:text-hi shrink-0 whitespace-nowrap transition-colors"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

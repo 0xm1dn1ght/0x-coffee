@@ -1,0 +1,48 @@
+---
+import { site } from '../data/site';
+import CoffeeMark from './CoffeeMark.astro';
+---
+
+<section id="top" class="border-line border-b py-16 sm:py-24">
+  <div class="mx-auto max-w-5xl px-5">
+    <p class="eyebrow mb-5">0x coffee · кофе для тех, кто пишет код</p>
+
+    <div class="grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]">
+      <div data-reveal>
+        <h1 class="text-hi text-[clamp(2rem,6.5vw,3.4rem)] leading-[1.12] font-bold">
+          Обжарено сегодня.<br />У вас — завтра.
+        </h1>
+        <p class="mt-5 max-w-[52ch] text-[1.02rem]">
+          {site.description}
+        </p>
+        <p class="text-dim mt-3 max-w-[52ch] text-sm">
+          Мы сами разработчики. Началось с того, что в офисе закончился приличный кофе — пришлось
+          найти обжарщика и собрать свой. Теперь его пьёт вся команда и ещё пара тысяч человек по
+          подписке.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a
+            href="#pricing"
+            class="border-vfd text-vfd hover:bg-vfd border px-5 py-3 text-[13px] tracking-[0.08em] uppercase transition-colors hover:text-[#05100e]"
+          >
+            Собрать подписку
+          </a>
+          <a
+            href="#roasts"
+            class="border-line text-dim hover:text-hi border px-5 py-3 text-[13px] tracking-[0.08em] uppercase transition-colors"
+          >
+            Посмотреть зёрна
+          </a>
+        </div>
+        <p class="text-dim mt-4 text-xs">Оплата картой «Мир» и через СБП. Отмена в один клик.</p>
+      </div>
+
+      <div
+        class="panel-scan border-vfd-dim flex justify-center rounded-md border bg-[#05100e] p-6"
+        data-reveal
+      >
+        <CoffeeMark variant="mug" class="block h-auto w-full max-w-[300px]" />
+      </div>
+    </div>
+  </div>
+</section>

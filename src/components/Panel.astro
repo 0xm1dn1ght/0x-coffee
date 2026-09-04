@@ -1,0 +1,24 @@
+---
+/** Bordered instrument-panel section wrapper. */
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  class?: string;
+}
+const { id, eyebrow, title, class: klass } = Astro.props;
+---
+
+<section id={id} class:list={['border-line border-b py-16 sm:py-20', klass]}>
+  <div class="mx-auto max-w-5xl px-5">
+    {eyebrow && <p class="eyebrow mb-5">{eyebrow}</p>}
+    {
+      title && (
+        <h2 class="text-hi mb-8 text-[clamp(1.3rem,3.4vw,1.9rem)] font-bold tracking-wide">
+          {title}
+        </h2>
+      )
+    }
+    <slot />
+  </div>
+</section>

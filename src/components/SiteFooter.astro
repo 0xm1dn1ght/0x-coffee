@@ -1,0 +1,24 @@
+---
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="text-dim py-9 text-xs tracking-[0.08em] uppercase">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5">
+    <span>{site.name} · кофе для программистов · обжарка малыми партиями · доставка по РФ</span>
+    <span class="flex flex-wrap gap-3">
+      {
+        site.social.map((s) => (
+          <a href={s.href} class="hover:text-hi transition-colors">
+            {s.label}
+          </a>
+        ))
+      }
+      <a href="#top" class="hover:text-hi transition-colors">наверх</a>
+    </span>
+  </div>
+  <div class="text-dim/70 mx-auto mt-4 max-w-5xl px-5 text-[0.65rem] tracking-normal normal-case">
+    © {year}
+    {site.name}. Оплата: {site.payments.join(' · ')}. Доставка: {site.delivery}.
+  </div>
+</footer>

@@ -1,0 +1,235 @@
+---
+/**
+ * Code-drawn coffee artwork (no photos).
+ *  - variant="mug"  : a mug of coffee with rising steam  (hero)
+ *  - variant="bean" : one detailed coffee bean, tinted + finished by `tone`
+ *                     (light = matte & pale, dark = oily & near-black),
+ *                     with a light→dark scale marker so the roast reads at a glance
+ */
+import type { RoastLevel } from '../data/roasts';
+
+interface Props {
+  variant: 'mug' | 'bean';
+  tone?: RoastLevel;
+  class?: string;
+  label?: string;
+}
+
+const { variant, tone = 'medium', class: klass, label } = Astro.props;
+
+// unique gradient ids so multiple marks can share a page
+const uid = Math.random().toString(36).slice(2, 8);
+
+interface BeanTone {
+  hi: string;
+  top: string;
+  bot: string;
+  scale: number;
+  markerX: number;
+  levelWord: string;
+}
+
+const beanTones: Record<RoastLevel, BeanTone> = {
+  light: {
+    hi: '#f2cd96',
+    top: '#d9a56c',
+    bot: '#9a6838',
+    scale: 0.95,
+    markerX: 56,
+    levelWord: 'светлая',
+  },
+  medium: {
+    hi: '#c2854e',
+    top: '#8f5a30',
+    bot: '#4f3220',
+    scale: 1,
+    markerX: 100,
+    levelWord: 'средняя',
+  },
+  dark: {
+    hi: '#5f4231',
+    top: '#3c281a',
+    bot: '#120a05',
+    scale: 1.06,
+    markerX: 144,
+    levelWord: 'тёмная',
+  },
+};
+
+const t = beanTones[tone];
+
+// Classic coffee-bean icon: a tilted ellipse split lengthwise by one smooth
+// S-curve gap. Single compound path; evenodd fill-rule punches the crease out
+// as a real hole (theme-safe, no mask). The sheen lives in the radial fill, so
+// it can't drift off the shape.
+const beanShape = [
+  // outer body
+  'M 100 36 C 143 36, 178 57, 178 84 C 178 111, 143 132, 100 132 C 57 132, 22 111, 22 84 C 22 57, 57 36, 100 36 Z',
+  // main crease — one smooth S, tapered at both ends, tucked inside the rim
+  'M 26 90 C 48 60, 76 56, 100 72 C 124 88, 150 92, 174 76 C 150 102, 124 98, 100 82 C 76 66, 48 72, 26 90 Z',
+].join(' ');
+---
+
+{
+  variant === 'mug' && (
+    <svg viewBox="0 0 240 210" class={klass} role="img" aria-label={label ?? 'Кружка кофе с паром'}>
+      <defs>
+        <radialGradient id={`coffee-${uid}`} cx="50%" cy="42%" r="62%">
+          <stop offset="0%" stop-color="#ffe1b3" />
+          <stop offset="45%" stop-color="#c98b4e" />
+          <stop offset="80%" stop-color="#6f4425" />
+          <stop offset="100%" stop-color="#3a2312" />
+        </radialGradient>
+        <linearGradient id={`mug-${uid}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#12201d" />
+          <stop offset="100%" stop-color="#0a1512" />
+        </linearGradient>
+        <filter id={`glow-${uid}`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2.6" result="b" />
+          <feMerge>
+            <feMergeNode in="b" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* steam */}
+      <g
+        class="steam"
+        fill="none"
+        stroke="#5ff0d8"
+        stroke-width="2.6"
+        stroke-linecap="round"
+        opacity="0.32"
+      >
+        <path d="M98 52 q-9 -14 2 -26 q9 -11 0 -22" />
+        <path d="M122 46 q-9 -14 2 -26 q9 -11 0 -22" />
+        <path d="M146 52 q-9 -14 2 -26 q9 -11 0 -22" />
+      </g>
+
+      {/* handle */}
+      <path
+        d="M176 92 h16 a24 24 0 0 1 0 48 h-12"
+        fill="none"
+        stroke="#5ff0d8"
+        stroke-width="6"
+        stroke-linecap="round"
+        filter={`url(#glow-${uid})`}
+      />
+
+      {/* body */}
+      <path
+        d="M60 74 h120 l-11 104 a18 18 0 0 1 -18 16 H89 a18 18 0 0 1 -18 -16 Z"
+        fill={`url(#mug-${uid})`}
+        stroke="#5ff0d8"
+        stroke-width="3"
+        stroke-linejoin="round"
+        filter={`url(#glow-${uid})`}
+      />
+
+      {/* coffee surface */}
+      <ellipse cx="120" cy="74" rx="60" ry="14" fill={`url(#coffee-${uid})`} />
+      <ellipse cx="120" cy="74" rx="60" ry="14" fill="none" stroke="#5ff0d8" stroke-width="2.4" />
+      <ellipse cx="104" cy="70" rx="12" ry="4" fill="#ffe8c4" opacity="0.5" />
+
+      {/* saucer line */}
+      <path d="M52 196 h136" stroke="#1c4d46" stroke-width="4" stroke-linecap="round" />
+    </svg>
+  )
+}
+
+{
+  variant === 'bean' && (
+    <svg
+      viewBox="0 0 200 200"
+      class={klass}
+      role="img"
+      aria-label={label ?? `Кофейное зерно, ${t.levelWord} обжарка`}
+    >
+      <defs>
+        <radialGradient id={`bean-${uid}`} cx="35%" cy="28%" r="85%">
+          <stop offset="0%" stop-color={t.hi} />
+          <stop offset="42%" stop-color={t.top} />
+          <stop offset="100%" stop-color={t.bot} />
+        </radialGradient>
+        <linearGradient id={`scale-${uid}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e3bd90" />
+          <stop offset="50%" stop-color="#7c4e2c" />
+          <stop offset="100%" stop-color="#1c110b" />
+        </linearGradient>
+        <filter id={`soft-${uid}`} x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3.4" />
+        </filter>
+        <filter id={`beanglow-${uid}`} x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="2.2" result="b" />
+          <feMerge>
+            <feMergeNode in="b" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* contact shadow */}
+      <ellipse
+        cx="100"
+        cy="170"
+        rx="54"
+        ry="8"
+        fill="#000"
+        opacity="0.38"
+        filter={`url(#soft-${uid})`}
+      />
+
+      <g transform={`rotate(-30 100 84) translate(100 84) scale(${t.scale}) translate(-100 -84)`}>
+        {/* bean body — crease punched out via evenodd; sheen is in the fill */}
+        <path d={beanShape} fill={`url(#bean-${uid})`} fill-rule="evenodd" />
+      </g>
+
+      {/* light → dark roast scale */}
+      <rect x="46" y="180" width="108" height="4" rx="2" fill={`url(#scale-${uid})`} />
+      <line
+        x1={t.markerX}
+        y1="174"
+        x2={t.markerX}
+        y2="180"
+        stroke="#5ff0d8"
+        stroke-width="1.4"
+        opacity="0.7"
+      />
+      <circle cx={t.markerX} cy="182" r="4.2" fill="#5ff0d8" filter={`url(#beanglow-${uid})`} />
+      <g fill="#5d656d" font-size="9" font-family="inherit">
+        <text x="46" y="197">
+          светлее
+        </text>
+        <text x="154" y="197" text-anchor="end">
+          темнее
+        </text>
+      </g>
+    </svg>
+  )
+}
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .steam path {
+      animation: rise 4s ease-in-out infinite;
+    }
+    .steam path:nth-child(2) {
+      animation-delay: 0.8s;
+    }
+    .steam path:nth-child(3) {
+      animation-delay: 1.6s;
+    }
+  }
+  @keyframes rise {
+    0%,
+    100% {
+      opacity: 0.12;
+      transform: translateY(3px);
+    }
+    50% {
+      opacity: 0.4;
+      transform: translateY(-5px);
+    }
+  }
+</style>

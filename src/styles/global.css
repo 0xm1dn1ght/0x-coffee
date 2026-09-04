@@ -1,0 +1,113 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ *
+ *  Design tokens — "VFD instrument panel"
+ *  Exposed as Tailwind utilities: bg-bg, text-vfd, border-line, ...
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #0a0b0c;
+  --color-panel: #131518;
+  --color-metal: #1c1f23;
+  --color-line: #2c3036;
+  --color-fg: #aeb6bd;
+  --color-dim: #7c8691; /* WCAG AA (~5.2:1) on --color-bg — was #5d656d (~3.3:1) */
+  --color-hi: #eef3f6;
+  --color-vfd: #5ff0d8;
+  --color-vfd-dim: #1c4d46;
+  --color-amber: #ffb85c;
+
+  --font-mono: 'Cascadia Mono', Consolas, 'SF Mono', 'Liberation Mono', 'Courier New', monospace;
+
+  --shadow-glow: 0 0 10px rgb(95 240 216 / 0.5), 0 0 2px rgb(95 240 216 / 0.85);
+}
+
+/* ------------------------------------------------------------------ *
+ *  Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    /* keep anchored headings clear of the sticky header */
+    scroll-padding-top: 4.5rem;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-vfd);
+    color: var(--color-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Components / utilities
+ * ------------------------------------------------------------------ */
+@layer components {
+  /* scanline overlay for anything that should read as a lit panel */
+  .panel-scan {
+    position: relative;
+    isolation: isolate;
+  }
+  .panel-scan::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: inherit;
+    background: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.14) 0 2px, transparent 2px 4px);
+    mix-blend-mode: overlay;
+    opacity: 0.55;
+  }
+
+  /* glowing readout digits */
+  .readout-digits {
+    color: var(--color-vfd);
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-shadow: var(--shadow-glow);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eyebrow {
+    color: var(--color-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Scroll reveal (progressive enhancement, JS adds .is-visible)
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
