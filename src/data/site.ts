@@ -1,7 +1,7 @@
 export const site = {
   name: '0x Coffee',
-  domain: '0xcoffee.ru',
-  url: 'https://0xcoffee.ru',
+  domain: '0x-coffee.pages.dev',
+  url: 'https://0x-coffee.pages.dev',
   tagline: 'Свежая обжарка для тех, кто пишет код',
   description:
     'Кофе от разработчиков для разработчиков: три моносортовых зерна, обжарка в день отправки, доставка по всей России. Выбираете вкус и интервал — дальше приходит само.',
