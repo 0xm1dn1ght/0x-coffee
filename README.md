@@ -1,95 +1,58 @@
-# 0x Coffee — лендинг
+# 0x Coffee
 
-Тестовый проект №1. Одностраничный лендинг вымышленного бренда: кофе-подписка
-для программистов с доставкой по России. Стиль — **«VFD-панель»**: почти чёрный
-фон, тёплый бирюзовый цвет индикатора со свечением, янтарные акценты,
-моноширинный шрифт, светящиеся табло и «датчики».
+Тестовый проект №1 — одностраничный лендинг вымышленного бренда: кофе-подписка
+«от программистов для программистов» с доставкой по России.
 
-Цель страницы: чтобы человек, зашедший впервые — даже не программист —
-заинтересовался и захотел попробовать этот кофе.
+- **Живой сайт:** https://0x-coffee.pages.dev
+- Автодеплой на Cloudflare Pages при каждом пуше в `main`.
+
+Стиль — «приборная панель»: почти чёрный фон, бирюзовый индикатор со свечением,
+янтарные акценты, моноширинный шрифт, светящиеся табло. Вся графика — инлайновый
+SVG/CSS, без фотографий и внешних запросов.
 
 ## Стек
 
-|                      |                                                                        |
-| -------------------- | ---------------------------------------------------------------------- |
-| **Astro 5**          | статический генератор, нулевой JS по умолчанию                         |
-| **TypeScript**       | `strict`, типизированные данные в `src/data/`                          |
-| **Tailwind CSS v4**  | через `@tailwindcss/vite`, токены в `src/styles/global.css` (`@theme`) |
-| **@astrojs/sitemap** | `sitemap-index.xml` на сборке                                          |
-| **View Transitions** | `<ClientRouter />` (мягкие переходы, если добавятся страницы)          |
-| **Prettier**         | + плагины `astro` и `tailwindcss`                                      |
+Astro 5 · TypeScript (strict) · Tailwind CSS v4 · `@astrojs/sitemap` · Prettier.
+В рантайме — ноль стороннего JS и сетевых запросов.
 
-Графика — **инлайновый SVG/CSS**, без фотографий (осознанное решение: держим
-«ноль сторонних запросов» и не зависим от подбора фото). `astro:assets` из
-плана убран вместе с фото.
-
-## Запуск
+## Разработка
 
 ```
 npm install
-npm run dev        # http://localhost:4321
+npm run dev       # http://localhost:4321
+npm run build     # прод-сборка в dist/
+npm run preview   # предпросмотр сборки
+npm run check     # проверка типов
+npm run format    # Prettier
 ```
 
-Прочие команды:
-
-```
-npm run build      # прод-сборка в dist/
-npm run preview     # локальный предпросмотр dist/
-npm run check       # проверка типов Astro
-npm run format      # Prettier
-```
-
-Нужен Node 18+ (у тебя стоит 24).
+Node 18.20+ / 20.3+ / 22+.
 
 ## Структура
 
 ```
 src/
-  data/            site.ts, roasts.ts  — весь контент и типы
-  styles/          global.css          — Tailwind v4 + токены палитры + reveal
-  lib/             reveal.ts           — scroll-анимация (учёт view transitions)
-  components/
-    CoffeeMark.astro   — SVG-графика: пролив воронки + зёрна по обжаркам
-    Readout.astro      — светящееся табло (температура, цена)
-    RoastGauge.astro   — сегментный датчик степени обжарки
-    Panel.astro        — рамка секции
-    Nav / Hero / FreshnessStrip / Roasts / HowItWorks / Voices / Pricing / SiteFooter
-  layouts/Base.astro   — <head>, SEO, OG, JSON-LD, CSP, ClientRouter
-  pages/index.astro    — сборка секций
-public/
-  _headers             — security-заголовки (Netlify / Cloudflare Pages)
-  favicon.svg, robots.txt
+  data/        site.ts, roasts.ts   — весь контент и типы
+  styles/      global.css           — Tailwind v4, палитра, scroll-reveal
+  lib/         reveal.ts            — появление секций при скролле
+  components/  Nav, Hero, FreshnessStrip, Roasts, HowItWorks, Voices,
+               Pricing, Faq, SiteFooter + Panel, Readout, RoastGauge,
+               CoffeeMark (SVG: кружка и зёрна)
+  layouts/     Base.astro           — <head>, SEO/OG, JSON-LD, CSP
+  pages/       index.astro          — сборка секций
+public/        _headers (заголовки безопасности), favicon.svg, robots.txt
 ```
 
-Весь текст и данные (обжарки, шаги, отзывы, цена, контакты) — в `src/data/`.
-Менять контент там, а не в разметке.
+Контент (обжарки, шаги, отзывы, FAQ, цена) правится в `src/data/`, не в разметке.
 
 ## Контент
 
-- **3 обжарки**: `null` (светлая), `segfault` (средняя), `deadlock` (тёмная).
-- **Локализация под РФ**: 1490 ₽ / 250 г (≈ 16–18 чашек), бесплатная доставка
-  от 3500 ₽, оплата «Мир» и СБП, доставка СДЭК и Почтой (1–4 дня), курьер по
-  Москве и Петербургу за сутки, контакты — Telegram и VK.
-- Ссылки соцсетей и оплаты сейчас заглушки (`href="#"`) — заменить в `site.ts`.
+- 3 обжарки: `null` (светлая), `segfault` (средняя), `deadlock` (тёмная).
+- Локализация под РФ: 1490 ₽ / 250 г, доставка 299 ₽ (бесплатно от 3500 ₽),
+  оплата «Мир» и СБП, СДЭК и Почта, контакты — Telegram и VK.
 
-## Безопасность
+## Известные TODO
 
-- `Content-Security-Policy` мета-тегом в `Base.astro` и заголовком в `_headers`:
-  `default-src 'self'`, внешние запросы запрещены. `'unsafe-inline'` для
-  style/script нужен из-за инлайновых стилей Astro и скрипта view transitions —
-  **в проде затянуть до nonce/hash** (Astro поддерживает
-  `experimental.csp` / вынос стилей: `build.inlineStylesheets: 'never'`).
-- `_headers`: `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`,
-  `Permissions-Policy`, `HSTS`, COOP/CORP.
-- GitHub Pages не читает `_headers` (только HTTPS + мета-CSP). Для полноценных
-  заголовков — Cloudflare Pages или Netlify (оба читают `_headers`, бесплатны
-  для статики).
-
-## Дальше
-
-1. Прогнать `npm run dev`, посмотреть вживую, поправить отступы/типографику.
-2. Заменить заглушки ссылок в `src/data/site.ts`.
-3. Определиться с шрифтом (сейчас системный моноширинный; можно подключить
-   self-hosted, без Google Fonts).
-4. Затянуть CSP до hash/nonce перед деплоем.
-5. Деплой на Cloudflare Pages / Netlify (`npm run build`, каталог `dist/`).
+- Ссылки на Telegram/VK в `src/data/site.ts` — заглушки (`#`).
+- CSP держит `'unsafe-inline'` для style/script — затянуть до hash/nonce.
+- Свой домен вместо `*.pages.dev` (тогда обновить `site` в `astro.config.mjs`).
