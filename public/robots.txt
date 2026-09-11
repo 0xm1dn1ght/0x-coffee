@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://0xcoffee.ru/sitemap-index.xml
+Sitemap: https://0xm1dn1ght.github.io/0x-coffee/sitemap-index.xml

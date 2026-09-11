@@ -3,8 +3,8 @@
 Тестовый проект №1 — одностраничный лендинг вымышленного бренда: кофе-подписка
 «от программистов для программистов» с доставкой по России.
 
-- **Живой сайт:** https://0x-coffee.pages.dev
-- Автодеплой на Cloudflare Pages при каждом пуше в `main`.
+- **Живой сайт:** https://0xm1dn1ght.github.io/0x-coffee/
+- Автодеплой на GitHub Pages (GitHub Actions) при каждом пуше в `main`.
 
 Стиль — «приборная панель»: почти чёрный фон, бирюзовый индикатор со свечением,
 янтарные акценты, моноширинный шрифт, светящиеся табло. Вся графика — инлайновый
@@ -55,4 +55,5 @@ public/        _headers (заголовки безопасности), favicon.s
 
 - Ссылки на Telegram/VK в `src/data/site.ts` — заглушки (`#`).
 - CSP держит `'unsafe-inline'` для style/script — затянуть до hash/nonce.
-- Свой домен вместо `*.pages.dev` (тогда обновить `site` в `astro.config.mjs`).
+- Свой домен вместо `github.io` (тогда обновить `site`/`base` в `astro.config.mjs`).
+- `public/_headers` — синтаксис Cloudflare/Netlify, GitHub Pages его не читает.

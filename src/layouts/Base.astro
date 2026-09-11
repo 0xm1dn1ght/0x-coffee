@@ -12,6 +12,7 @@ interface Props {
 const { title = `${site.name} — ${site.tagline}`, description = site.description } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -64,8 +65,8 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <link rel="sitemap" href={`${base}/sitemap-index.xml`} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
